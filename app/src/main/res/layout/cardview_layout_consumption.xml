@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/margin_left_cardview_consumption"
+    android:layout_marginTop="-30dp"
+    android:layout_marginRight="@dimen/margin_right_cardview_consumption"
+    android:layout_marginBottom="@dimen/liveblogWebViewMarginTop"
+    app:cardElevation="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_cardview_consumption">
+
+        <TextView
+            android:id="@+id/article_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:lineSpacingExtra="-1sp"
+            android:maxLines="1"
+            android:textColor="#0099b8"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="" />
+
+        <TextView
+            android:id="@+id/article_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_category"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="3dp"
+            android:lineSpacingExtra="8sp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Gowda hits back at BJP for rediculing HDK's US visit" />
+
+        <LinearLayout
+            android:id="@+id/date_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/article_title"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_top_date_layout"
+            android:layout_marginBottom="@dimen/consumptionCardDateTimeMarginBottom">
+
+            <TextView
+                android:gravity="right"
+                android:layout_weight="1"
+                android:id="@+id/article_by"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="-1sp"
+                android:maxLines="2"
+                android:textSize="11sp"
+                android:visibility="gone"
+                android:textStyle="bold"
+                tools:text="By Uday" />
+
+            <View
+                android:layout_gravity="center_vertical"
+                android:id="@+id/seprator_line_author"
+                android:layout_width="1dp"
+                android:layout_height="12dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toEndOf="@+id/article_by"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_weight="1"
+                android:gravity="left"
+                android:id="@+id/article_date_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/seprator_line_author"
+                android:lineSpacingExtra="-1sp"
+                android:maxLines="2"
+                android:textSize="11sp"
+                tools:text="30 JUNE 19,23:24 PM"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WebviewPOC</string>
+    <string name="useragentstring" translatable="false"></string>
+</resources>
