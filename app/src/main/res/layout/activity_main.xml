@@ -10,7 +10,7 @@
     android:scrollbars="none"
     android:visibility="visible">-->
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/consumption_nested_layout"
             android:layout_width="match_parent"
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,14 +43,15 @@
 
             </RelativeLayout>
 
-            <include android:visibility="gone" layout="@layout/cardview_layout_consumption" />
+            <!--<include layout="@layout/cardview_layout_consumption" />-->
               <com.solutelabs.webviewpoc.CustomWebView
+                  android:layout_below="@id/baseContainer"
                           android:id="@+id/consumptionWebView"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:visibility="visible" />
 
 
-        </LinearLayout>
+        </RelativeLayout>
     <!--</androidx.core.widget.NestedScrollView>-->
 

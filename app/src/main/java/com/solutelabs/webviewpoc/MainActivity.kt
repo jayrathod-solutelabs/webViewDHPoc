@@ -11,6 +11,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var myWebView: WebView
     lateinit var webView: CustomWebView
     lateinit var baseContainer: RelativeLayout
+    //lateinit var baseTitleContainer: CardView
+
     //lateinit var consumptionNestedScrollView: NestedScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderWebview() {
         //consumptionNestedScrollView = findViewById(R.id.consumptionNestedScrollView)
         webView = findViewById(R.id.consumptionWebView)
+        //baseTitleContainer = findViewById(R.id.baseTitleContainer)
         baseContainer = findViewById(R.id.baseContainer)
 
         webView.settings.apply {
@@ -52,41 +56,18 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        webView.isNestedScrollingEnabled = false
+        //webView.isNestedScrollingEnabled = false
 
 
-        // Handle redirects within the WebView
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return false // Ensures all URLs open inside the WebView
-            }
+        webView.webViewClient = WebViewClient()
 
-
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                Log.e("URL","Loading URL --- ${view?.url}")
-
-              /*  val twitterScript =
-                    "<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>"
-                view?.loadUrl(
-                    "javascript:(function() { " +
-                            "var parent = document.getElementsByTagName('head').item(0); " +
-                            "var script = document.createElement('script'); " +
-                            "script.type = 'text/javascript'; " +
-                            "script.innerHTML = '" + twitterScript + "'; " +
-                            "parent.appendChild(script)" +
-                            "})()"
-                )
-                view!!.postDelayed({
-                    val params = view!!.layoutParams
-                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
-                    view!!.layoutParams = params
-                }, 500)
-*/
-
-
-            }
+        webView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            baseContainer.scrollTo(scrollX, scrollY)
+           // baseTitleContainer.scrollTo(scrollX,scrollY)
         }
+        // Set the scroll listener
+
+
 
         // Load the URL
         //val url = "https://www.deccanherald.com/india/india-politics-live-latest-bjp-narendra-modi-congress-rahul-gandhi-amit-shah-nda-maha-yuti-delhi-assembly-elections-2025-punjab-aap-arvind-kejriwal-atishi-manipur-biren-singh-punjab-france-us-macron-trump-news-updates-3399540?app=true"

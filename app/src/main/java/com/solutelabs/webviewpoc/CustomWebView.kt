@@ -11,6 +11,28 @@ class CustomWebView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : WebView(context, attrs, defStyleAttr) {
 
+    private var onScrollChangedListener: OnScrollChangedListener? = null
+
+    interface OnScrollChangedListener {
+        fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int)
+    }
+
+    fun setOnScrollChangedListener(listener: OnScrollChangedListener) {
+        this.onScrollChangedListener = listener
+    }
+
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        super.onScrollChanged(l, t, oldl, oldt)
+        onScrollChangedListener?.onScrollChanged(l, t, oldl, oldt)
+    }
+}
+/*
+class CustomWebView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : WebView(context, attrs, defStyleAttr) {
+
     private var startX = 0f
     private var startY = 0f
     private var isBeingDragged = false
@@ -43,4 +65,4 @@ class CustomWebView @JvmOverloads constructor(
         }
         return super.onTouchEvent(event)
     }
-}
+}*/

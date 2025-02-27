@@ -7,6 +7,7 @@
     android:layout_marginLeft="@dimen/margin_left_cardview_consumption"
     android:layout_marginTop="-30dp"
     android:layout_marginRight="@dimen/margin_right_cardview_consumption"
+    android:id="@+id/baseTitleContainer"
     android:layout_marginBottom="@dimen/liveblogWebViewMarginTop"
     app:cardElevation="2dp">
 
