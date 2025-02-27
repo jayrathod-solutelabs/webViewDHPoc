@@ -1,19 +1,17 @@
 package com.solutelabs.webviewpoc
 
-import android.graphics.Bitmap
-import android.net.http.SslError
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.webkit.SslErrorHandler
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -22,11 +20,94 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     lateinit var myWebView: WebView
+    lateinit var webView: CustomWebView
+    lateinit var baseContainer: RelativeLayout
+    //lateinit var consumptionNestedScrollView: NestedScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setWebView()
+       // setWebView()
+        renderWebview()
+    }
+
+    private fun renderWebview() {
+        //consumptionNestedScrollView = findViewById(R.id.consumptionNestedScrollView)
+        webView = findViewById(R.id.consumptionWebView)
+        baseContainer = findViewById(R.id.baseContainer)
+
+        webView.settings.apply {
+          /*  javaScriptEnabled = true
+            domStorageEnabled = true*/
+
+            mixedContentMode = WebSettings.LOAD_DEFAULT
+            allowFileAccess = true
+            javaScriptEnabled = true // Enable JavaScript
+            domStorageEnabled = true // Improve performance
+            useWideViewPort = true // Enable better layout rendering
+            loadWithOverviewMode = true // Fit content properly
+            setSupportZoom(false) // Disable zooming
+            builtInZoomControls = false // Disable pinch-to-zoom
+            displayZoomControls = false // Hide zoom controls
+        }
+
+
+        webView.isNestedScrollingEnabled = false
+
+
+        // Handle redirects within the WebView
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                return false // Ensures all URLs open inside the WebView
+            }
+
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                Log.e("URL","Loading URL --- ${view?.url}")
+
+              /*  val twitterScript =
+                    "<script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>"
+                view?.loadUrl(
+                    "javascript:(function() { " +
+                            "var parent = document.getElementsByTagName('head').item(0); " +
+                            "var script = document.createElement('script'); " +
+                            "script.type = 'text/javascript'; " +
+                            "script.innerHTML = '" + twitterScript + "'; " +
+                            "parent.appendChild(script)" +
+                            "})()"
+                )
+                view!!.postDelayed({
+                    val params = view!!.layoutParams
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                    view!!.layoutParams = params
+                }, 500)
+*/
+
+
+            }
+        }
+
+        // Load the URL
+        //val url = "https://www.deccanherald.com/india/india-politics-live-latest-bjp-narendra-modi-congress-rahul-gandhi-amit-shah-nda-maha-yuti-delhi-assembly-elections-2025-punjab-aap-arvind-kejriwal-atishi-manipur-biren-singh-punjab-france-us-macron-trump-news-updates-3399540?app=true"
+        //With Twitter
+        val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-with-twitter-embed-scascs-880?app=true"""
+        //Without Twitter
+        //val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-without-twitter-embed-scsacs-879?app=true"""
+        webView.loadUrl(url)
+
+
+    }
+    private fun adjustWebViewHeight(webView: WebView) {
+        webView.postDelayed({
+            webView.evaluateJavascript("(function() { return document.body.scrollHeight; })();") { height ->
+                height?.toFloatOrNull()?.toInt()?.let { newHeight ->
+                    webView.layoutParams = webView.layoutParams.apply {
+                        this.height = newHeight
+                    }
+                }
+            }
+        }, 1000) // Delay to ensure Twitter embeds load
     }
 
     private fun setWebView() {
@@ -43,8 +124,10 @@ class MainActivity : AppCompatActivity() {
         myWebView.settings.loadsImagesAutomatically = true
 
 
-        object : WebViewClient() {
+    /*    myWebView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                Log.e("Error","URL --- :: $url")
+                Toast.makeText(this@MainActivity, url, Toast.LENGTH_SHORT).show()
                 view.loadUrl(url)
                 return true
             }
@@ -96,7 +179,9 @@ class MainActivity : AppCompatActivity() {
                 logWithTimestamp("Permissions Policy Applied")
                 super.onPageFinished(view, url)
             }
-        }.also { myWebView.webViewClient = it }
+        }*/
+
+
 
         myWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
@@ -104,11 +189,12 @@ class MainActivity : AppCompatActivity() {
                 Log.i("hello","newProgress: $newProgress")
             }
         }
-        var link = """https://www.deccanherald.com/india/india-politics-live-latest-bjp-narendra-modi-congress-rahul-gandhi-amit-shah-nda-maha-yuti-delhi-assembly-elections-2025-punjab-aap-arvind-kejriwal-atishi-manipur-biren-singh-punjab-france-us-macron-trump-news-updates-3399540?app=true#7"""
+        var link = """https://www.deccanherald.com/india/india-politics-live-latest-bjp-narendra-modi-congress-rahul-gandhi-amit-shah-nda-maha-yuti-delhi-assembly-elections-2025-punjab-aap-arvind-kejriwal-atishi-manipur-biren-singh-punjab-france-us-macron-trump-news-updates-3399540?app=true"""
 
         myWebView.loadUrl(link)
+        Log.e("Error","URL --- Link:: $link")
         logWithTimestamp("Load The Link")
-        Toast.makeText(this@MainActivity, "Loading Done", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this@MainActivity, "Loading Done", Toast.LENGTH_SHORT).show()
 
     }
 
