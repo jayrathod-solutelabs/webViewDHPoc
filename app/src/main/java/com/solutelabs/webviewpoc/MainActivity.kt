@@ -9,6 +9,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var myWebView: WebView
     lateinit var webView: CustomWebView
     lateinit var baseContainer: RelativeLayout
+    lateinit var ivNewsImage: ImageView
     //lateinit var baseTitleContainer: CardView
 
     //lateinit var consumptionNestedScrollView: NestedScrollView
@@ -37,8 +39,9 @@ class MainActivity : AppCompatActivity() {
     private fun renderWebview() {
         //consumptionNestedScrollView = findViewById(R.id.consumptionNestedScrollView)
         webView = findViewById(R.id.consumptionWebView)
+        ivNewsImage = findViewById(R.id.ivNewsImage)
         //baseTitleContainer = findViewById(R.id.baseTitleContainer)
-        baseContainer = findViewById(R.id.baseContainer)
+      //  baseContainer = findViewById(R.id.baseContainer)
 
         webView.settings.apply {
           /*  javaScriptEnabled = true
@@ -62,19 +65,39 @@ class MainActivity : AppCompatActivity() {
         webView.webViewClient = WebViewClient()
 
         webView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            baseContainer.scrollTo(scrollX, scrollY)
+            ivNewsImage.scrollTo(scrollX, scrollY)
            // baseTitleContainer.scrollTo(scrollX,scrollY)
         }
         // Set the scroll listener
 
 
 
+        webView.webViewClient = object : android.webkit.WebViewClient() {
+            override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
+                super.onPageFinished(view, url)
+
+                // Inject CSS to add top margin to the body
+                val css = "body { margin-top: 250px !important; }" // Adjust the margin value as needed
+                val js = """
+                    var style = document.createElement('style');
+                    style.type = 'text/css';
+                    style.innerHTML = '$css';
+                    document.head.appendChild(style);
+                """.trimIndent()
+
+                view?.evaluateJavascript(js, null)
+            }
+        }
+
+
         // Load the URL
         //val url = "https://www.deccanherald.com/india/india-politics-live-latest-bjp-narendra-modi-congress-rahul-gandhi-amit-shah-nda-maha-yuti-delhi-assembly-elections-2025-punjab-aap-arvind-kejriwal-atishi-manipur-biren-singh-punjab-france-us-macron-trump-news-updates-3399540?app=true"
         //With Twitter
-        val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-with-twitter-embed-scascs-880?app=true"""
+        //val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-with-twitter-embed-scascs-880?app=true"""
         //Without Twitter
         //val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-without-twitter-embed-scsacs-879?app=true"""
+        // Live URL
+        val url="""https://www.deccanherald.com/india/indian-political-updates-live-latest-news-congress-bjp-aap-shiv-sena-ubt-tmc-rahul-gandhi-narendra-modi-jairam-ramesh-bihar-punjab-telangana-shashi-tharoor-andhra-pradesh-legislative-council-election-m-k-stalin-3423781?app=true"""
         webView.loadUrl(url)
 
 

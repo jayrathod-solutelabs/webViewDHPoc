@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<androidx.core.widget.NestedScrollView
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.core.widget.NestedScrollView
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,48 +9,28 @@
     android:scrollbars="none"
     android:visibility="visible">-->
 
-        <RelativeLayout
-            android:id="@+id/consumption_nested_layout"
-            android:layout_width="match_parent"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <RelativeLayout
-                android:id="@+id/baseContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/ivNewsImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/placeholder_16_9"
-                        android:visibility="visible" />
-
-                </RelativeLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/consumption_nested_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:visibility="visible">
 
 
-            </RelativeLayout>
+    <com.solutelabs.webviewpoc.CustomWebView
+        android:id="@+id/consumptionWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
-            <!--<include layout="@layout/cardview_layout_consumption" />-->
-              <com.solutelabs.webviewpoc.CustomWebView
-                  android:layout_below="@id/baseContainer"
-                          android:id="@+id/consumptionWebView"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:visibility="visible" />
-
-
-        </RelativeLayout>
-    <!--</androidx.core.widget.NestedScrollView>-->
+    <ImageView
+        android:id="@+id/ivNewsImage"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/placeholder_16_9"
+        android:visibility="visible" />
+</RelativeLayout><!--</androidx.core.widget.NestedScrollView>-->
 
