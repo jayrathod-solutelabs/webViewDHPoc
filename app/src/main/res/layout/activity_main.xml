@@ -10,7 +10,6 @@
     android:visibility="visible">-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/consumption_nested_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,12 +24,36 @@
         android:layout_height="match_parent"
         android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/ivNewsImage"
+    <RelativeLayout
+        android:id="@+id/scrollingRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/placeholder_16_9"
-        android:visibility="visible" />
-</RelativeLayout><!--</androidx.core.widget.NestedScrollView>-->
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivNewsImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/placeholder_16_9"
+            android:visibility="visible" />
+
+        <include
+            android:id="@+id/baseTitleContainer"
+            layout="@layout/cardview_layout_consumption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivNewsImage"
+            android:layout_marginLeft="@dimen/margin_left_cardview_consumption"
+            android:layout_marginTop="-30dp"
+            android:layout_marginRight="@dimen/margin_right_cardview_consumption"
+            android:layout_marginBottom="@dimen/liveblogWebViewMarginTop" />
+
+
+    </RelativeLayout>
+
+
+
+
+
+</RelativeLayout>
 
