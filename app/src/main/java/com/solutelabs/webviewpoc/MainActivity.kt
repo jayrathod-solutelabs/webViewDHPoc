@@ -2,6 +2,7 @@ package com.solutelabs.webviewpoc
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
@@ -11,9 +12,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -25,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var webView: CustomWebView
     lateinit var baseContainer: RelativeLayout
     lateinit var ivNewsImage: RelativeLayout
+    lateinit var relatedStories: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderWebview() {
         webView = findViewById(R.id.consumptionWebView)
         ivNewsImage = findViewById(R.id.scrollingRelativeLayout)
+        relatedStories = findViewById(R.id.recyclerView_viewType)
 
         webView.settings.apply {
           /*  javaScriptEnabled = true
@@ -51,6 +57,16 @@ class MainActivity : AppCompatActivity() {
             builtInZoomControls = false // Disable pinch-to-zoom
             displayZoomControls = false // Hide zoom controls
         }
+        relatedStories.setLayoutManager(LinearLayoutManager(this,RecyclerView.VERTICAL,false))
+
+        relatedStories.bindData(
+            data = listOf("1111111111", "2222222222", "3333333333", "4444444444", "5555555555"),
+            layoutRes = R.layout.related_stories_item,
+            bindFunc = { view, item ->
+                val textView = view.findViewById<TextView>(R.id.textView)
+                textView.text = item
+            }
+        )
 
 
         //webView.isNestedScrollingEnabled = false
@@ -152,5 +168,33 @@ class MainActivity : AppCompatActivity() {
         Log.d("logWithTimestamp", "[$currentTime] $message")
     }
 
+
+
+    fun <T> RecyclerView.bindData(
+        data: List<T>,
+        layoutRes: Int,
+        bindFunc: (View, T) -> Unit,
+        clickListener: ((T) -> Unit)? = null
+    ): RecyclerView.Adapter<*>? {
+        adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+                val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
+                return ViewHolder(view)
+            }
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+                val item = data[position]
+                bindFunc(holder.itemView, item)
+                clickListener?.let { listener ->
+                    holder.itemView.setOnClickListener { listener(item) }
+                }
+            }
+
+            override fun getItemCount() = data.size
+            inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+        }
+        return adapter
+    }
 
 }
