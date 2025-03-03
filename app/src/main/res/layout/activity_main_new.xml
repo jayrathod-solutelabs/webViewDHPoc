@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:maxHeight="300dp"
+    android:layout_height="wrap_content">
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/consumption_nested_layout"
@@ -10,10 +18,11 @@
     android:visibility="visible">
 
 
+
     <com.solutelabs.webviewpoc.CustomWebView
         android:id="@+id/consumptionWebView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible" />
 
     <RelativeLayout
@@ -46,43 +55,43 @@
 
 
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+
+    <LinearLayout
+        android:id="@+id/linearBottom"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_below="@id/consumptionWebView"
-        android:fillViewport="true"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:id="@+id/linearBottom"
+        android:layout_height="200dp">
+        <TextView
+
+            android:id="@+id/textViewRelated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8sp"
+            android:maxLines="2"
+            android:text="Related"
+            android:textAlignment="center"
+            android:textSize="@dimen/related_text_textsize"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_viewType"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-            <TextView
+            android:layout_height="wrap_content"
 
-                android:id="@+id/textViewRelated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="8sp"
-                android:maxLines="2"
-                android:text="Related"
-                android:textAlignment="center"
-                android:textSize="@dimen/related_text_textsize"
-                android:textStyle="bold"
-                android:visibility="visible" />
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
+            />
+
+    </LinearLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_viewType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:visibility="visible"
-                />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
 
 
 </RelativeLayout>
 
+
+</androidx.core.widget.NestedScrollView>

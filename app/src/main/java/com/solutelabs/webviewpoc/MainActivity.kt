@@ -1,5 +1,6 @@
 package com.solutelabs.webviewpoc
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,8 +30,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var myWebView: WebView
     lateinit var webView: CustomWebView
     lateinit var baseContainer: RelativeLayout
+    lateinit var linearBottom: LinearLayout
     lateinit var ivNewsImage: RelativeLayout
     lateinit var relatedStories: RecyclerView
+    lateinit var textViewRelated: TextView
+    lateinit var nestedScrollView: NestedScrollView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +46,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderWebview() {
         webView = findViewById(R.id.consumptionWebView)
+        linearBottom = findViewById(R.id.linearBottom)
+        textViewRelated = findViewById(R.id.textViewRelated)
         ivNewsImage = findViewById(R.id.scrollingRelativeLayout)
         relatedStories = findViewById(R.id.recyclerView_viewType)
+        nestedScrollView = findViewById(R.id.nestedScrollView)
 
         webView.settings.apply {
           /*  javaScriptEnabled = true
@@ -57,16 +66,7 @@ class MainActivity : AppCompatActivity() {
             builtInZoomControls = false // Disable pinch-to-zoom
             displayZoomControls = false // Hide zoom controls
         }
-        relatedStories.setLayoutManager(LinearLayoutManager(this,RecyclerView.VERTICAL,false))
 
-        relatedStories.bindData(
-            data = listOf("1111111111", "2222222222", "3333333333", "4444444444", "5555555555"),
-            layoutRes = R.layout.related_stories_item,
-            bindFunc = { view, item ->
-                val textView = view.findViewById<TextView>(R.id.textView)
-                textView.text = item
-            }
-        )
 
 
         //webView.isNestedScrollingEnabled = false
@@ -76,7 +76,23 @@ class MainActivity : AppCompatActivity() {
 
         webView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             ivNewsImage.scrollTo(scrollX, scrollY)
-           // baseTitleContainer.scrollTo(scrollX,scrollY)
+
+
+            val threshold = 20
+            val isAtBottom = webView.contentHeight * webView.scale <= webView.scrollY + webView.height + threshold
+            //Log.e("Tag","Bottom --- ${isAtBottom} -- ${(webView.contentHeight * webView.scale)} -- ${ webView.scrollY + webView.height + threshold}")
+
+            if (isAtBottom) {
+                Log.e(TAG, "renderWebview: Scroll End")
+                // Scroll the ImageView when WebView finishes scrolling
+                //linearBottom.scrollTo(0,textViewRelated.top)
+                //nestedScrollView.smoothScrollTo(0, textViewRelated.top)
+                nestedScrollView.post {
+                    nestedScrollView.scrollTo(0,scrollY)
+                }
+
+
+            }
         }
         // Set the scroll listener
 
@@ -85,9 +101,6 @@ class MainActivity : AppCompatActivity() {
         webView.webViewClient = object : android.webkit.WebViewClient() {
             override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
                 super.onPageFinished(view, url)
-
-                Log.i("hello","ivNewsImage.measuredHeight: ${ivNewsImage.measuredHeight}")
-                Log.i("hello","view.height: ${view?.height}")
 
                 ivNewsImage.post {
                     val fullHeightPx = ivNewsImage.measuredHeight // Height in pixels
@@ -98,9 +111,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         val url="""https://www.deccanherald.com/india/indian-political-updates-live-latest-news-congress-bjp-aap-shiv-sena-ubt-tmc-rahul-gandhi-narendra-modi-jairam-ramesh-bihar-punjab-telangana-shashi-tharoor-andhra-pradesh-legislative-council-election-m-k-stalin-3423781?app=true"""
+        // Normal story
+        //val url="""https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-with-twitter-embed-scascs-880?app=true"""
         webView.loadUrl(url)
 
+        //webView.visibility=View.GONE
 
+        relatedStories.setLayoutManager(LinearLayoutManager(this,RecyclerView.VERTICAL,false))
+
+        relatedStories.bindData(
+            data = listOf("1111111111", "2222222222", "3333333333", "4444444444", "5555555555", "3333333333", "4444444444", "5555555555", "3333333333", "4444444444", "5555555555", "3333333333", "4444444444", "5555555555", "3333333333", "4444444444", "5555555555", "3333333333", "4444444444", "5555555555"),
+            layoutRes = R.layout.related_stories_item,
+            bindFunc = { view, item ->
+                val textView = view.findViewById<TextView>(R.id.textView)
+                textView.text = item
+            }
+        )
     }
 
     private fun pxToDp(px: Int): Int {
@@ -110,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun injectCSS(view: WebView?, height: Int) {
-        val css = "body { margin-top: ${height}px !important; }" // Use dynamic height
+        val css = "body { margin-top: ${height}px; !important; }" // Use dynamic height
         val js = """
         var style = document.createElement('style');
         style.type = 'text/css';
@@ -121,52 +147,6 @@ class MainActivity : AppCompatActivity() {
         view?.evaluateJavascript(js, null)
     }
 
-
-    private fun adjustWebViewHeight(webView: WebView) {
-        webView.postDelayed({
-            webView.evaluateJavascript("(function() { return document.body.scrollHeight; })();") { height ->
-                height?.toFloatOrNull()?.toInt()?.let { newHeight ->
-                    webView.layoutParams = webView.layoutParams.apply {
-                        this.height = newHeight
-                    }
-                }
-            }
-        }, 1000) // Delay to ensure Twitter embeds load
-    }
-
-    private fun setWebView() {
-        myWebView = findViewById(R.id.consumptionWebView)
-
-        myWebView.getSettings().setJavaScriptEnabled(true)
-        myWebView.getSettings().setLoadWithOverviewMode(true)
-        myWebView.getSettings().setUseWideViewPort(true)
-        myWebView.settings.domStorageEnabled = true
-        myWebView.settings.cacheMode = WebSettings.LOAD_DEFAULT
-
-        myWebView.settings.mediaPlaybackRequiresUserGesture = false
-        myWebView.settings.blockNetworkImage = false
-        myWebView.settings.loadsImagesAutomatically = true
-
-        myWebView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-                Log.i("hello","newProgress: $newProgress")
-            }
-        }
-        var link = """https://www.deccanherald.com/india/india-politics-live-latest-bjp-narendra-modi-congress-rahul-gandhi-amit-shah-nda-maha-yuti-delhi-assembly-elections-2025-punjab-aap-arvind-kejriwal-atishi-manipur-biren-singh-punjab-france-us-macron-trump-news-updates-3399540?app=true"""
-
-        myWebView.loadUrl(link)
-        Log.e("Error","URL --- Link:: $link")
-        logWithTimestamp("Load The Link")
-    }
-
-
-
-    fun logWithTimestamp(message: String) {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val currentTime = dateFormat.format(Date())
-        Log.d("logWithTimestamp", "[$currentTime] $message")
-    }
 
 
 
