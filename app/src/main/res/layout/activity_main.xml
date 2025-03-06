@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rlMain"
@@ -8,53 +7,9 @@
     android:focusableInTouchMode="true"
     android:background="@color/white">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/consumptionNestedScrollView"
+    <!-- Jetpack Compose will handle the scrolling -->
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/consumption_nested_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/ivNewsImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/placeholder_16_9"
-                        android:visibility="visible" />
-
-                </RelativeLayout>
-
-
-            </RelativeLayout>
-
-            <include layout="@layout/cardview_layout_consumption" />
-
-            <WebView
-                android:id="@+id/consumptionWebView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:layout_marginLeft="@dimen/consumptionWebViewMarginLeft"
-                android:layout_marginRight="@dimen/consumptionWebViewMarginRight"
-                android:visibility="visible" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="match_parent" />
 </RelativeLayout>
