@@ -2,39 +2,79 @@ package com.solutelabs.webviewpoc
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var myWebView: WebView
-    lateinit var webView: CustomWebView
+    lateinit var webView: WebView
     lateinit var baseContainer: RelativeLayout
+    lateinit var consumption_nested_layout: LinearLayout
     //lateinit var consumptionNestedScrollView: NestedScrollView
-
+var isLoad=true;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        setContent {
+            MyComposeUI()
+        }
        // setWebView()
-        renderWebview()
+        //renderWebview()
     }
+
+
+
+
+    
+
+    @Composable
+    fun MyComposeUI() {
+        MaterialTheme {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = "Welcome to Jetpack Compose!")
+                Button(onClick = { /* TODO */ }) {
+                    Text("Click Me")
+                }
+            }
+        }
+    }
+    
+    
 
     private fun renderWebview() {
         //consumptionNestedScrollView = findViewById(R.id.consumptionNestedScrollView)
-        webView = findViewById(R.id.consumptionWebView)
-        baseContainer = findViewById(R.id.baseContainer)
+        //webView = findViewById(R.id.consumptionWebView)
+        consumption_nested_layout = findViewById(R.id.consumption_nested_layout)
+
+
+        webView= WebView(this)
+        val layoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        webView.setLayoutParams(layoutParams);
 
         webView.settings.apply {
           /*  javaScriptEnabled = true
@@ -94,7 +134,13 @@ class MainActivity : AppCompatActivity() {
         val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-with-twitter-embed-scascs-880?app=true"""
         //Without Twitter
         //val url = """https://deccanherald-web.qtstage.io/india/andhra-pradesh/text-story-without-twitter-embed-scsacs-879?app=true"""
-        webView.loadUrl(url)
+    runOnUiThread {
+       /* webView.loadUrl(url)
+
+        consumption_nested_layout.addView(webView)*/
+    }
+       // webView.loadUrl("file:///android_asset/myweb.html");
+
 
 
     }
@@ -111,7 +157,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setWebView() {
-        myWebView = findViewById(R.id.consumptionWebView)
+       // myWebView = findViewById(R.id.consumptionWebView)
 
         myWebView.getSettings().setJavaScriptEnabled(true)
         myWebView.getSettings().setLoadWithOverviewMode(true)
